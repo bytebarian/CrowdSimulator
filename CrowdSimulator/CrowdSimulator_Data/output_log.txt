@@ -1,0 +1,49 @@
+Initialize engine version: 5.6.0f3 (497a0f351392)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 560 (ID=0x1201)
+    Vendor:   NVIDIA
+    VRAM:     978 MB
+    Driver:   21.21.13.7653
+Begin MonoManager ReloadAssembly
+Platform assembly: E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\Vectrosity.dll (this message is harmless)
+Loading E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\Vectrosity.dll into Unity Child Domain
+- Completed reload, in  0.110 seconds
+Platform assembly: E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: E:\Github\CrowdSimulator\CrowdSimulator\CrowdSimulator_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 3840x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+The referenced script on this Behaviour (Game Object 'FundamentalDiagram') is missing!
+ 
+(Filename:  Line: 1743)
+
+UnloadTime: 1.054097 ms
+IsolatedStorageException: Could not find file "E:\Github\CrowdSimulator\CrowdSimulator\geometry.txt".
+  at System.IO.FileStream..ctor (System.String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean anonymous, FileOptions options) [0x00000] in <filename unknown>:0 
+  at System.IO.FileStream..ctor (System.String path, FileMode mode, FileAccess access, FileShare share) [0x00000] in <filename unknown>:0 
+  at System.IO.File.OpenRead (System.String path) [0x00000] in <filename unknown>:0 
+  at System.IO.StreamReader..ctor (System.String path, System.Text.Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize) [0x00000] in <filename unknown>:0 
+  at System.IO.StreamReader..ctor (System.String path) [0x00000] in <filename unknown>:0 
+  at Maze.LoadFromFile (System.String filename) [0x00000] in <filename unknown>:0 
+  at GeometryLoader.LoadGeometry (System.String folderpath) [0x00000] in <filename unknown>:0 
+  at PlaybackControl.StartSimulaton () [0x00000] in <filename unknown>:0 
+  at PlaybackControl.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 1e70 -> priority: 1 
+  Thread -> id: 341c -> priority: 1 
+  Thread -> id: 1afc -> priority: 1 
+  Thread -> id: 3724 -> priority: 1 
