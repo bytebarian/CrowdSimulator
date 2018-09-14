@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using Assets.Scripts.Maze;
+using System.Xml.Linq;
+using System.Linq;
 
 public class Maze : MonoBehaviour
 {
@@ -22,6 +25,10 @@ public class Maze : MonoBehaviour
 
 	private MazeCell[,] cells;
 
+    public List<MazeDoor> doors;
+
+    public List<MazeWall> walls;
+
 	public IntVector2 RandomCoordinates {
 		get {
 			return new IntVector2(Random.Range(0, size.x), Random.Range(0, size.z));
@@ -36,65 +43,21 @@ public class Maze : MonoBehaviour
 		return cells[coordinates.x, coordinates.z];
 	}
 
-	public void Generate () {
-		cells = new MazeCell[size.x, size.z];
-		List<MazeCell> activeCells = new List<MazeCell>();
-		DoFirstGenerationStep(activeCells);
-		while (activeCells.Count > 0) {
-			DoNextGenerationStep(activeCells);
-		}
-	}
-
     public void LoadFromFile(string filename)
     {
-        var sr = new StreamReader(Application.dataPath + "/" + filename);
-        var fileContent = sr.ReadToEnd();
-        sr.Close();
+        var document = XDocument.Load(Application.dataPath + "/" + filename);
+        var root = document.Root;
 
-        var entities = fileContent.Split("\n"[0]);
+        var size = root.Element("Size");
 
-        // get size of maze from first entity
-        var sizev = entities[0].Split(':');
-        if (sizev.Length != 2) return;
-        int sizex, sizey;
-        if (!int.TryParse(sizev[0], out sizex) || !int.TryParse(sizev[1], out sizey)) return;
-        size = new IntVector2(sizex, sizey);
-        cells = new MazeCell[size.x, size.z];
-        // initialize all cells with empty cell
-        foreach (var v in IntVector2.Range(size))
-        {
-            CreateCell(v);
-        }
-        
-        foreach (var entity in entities)
-        {
-            var v = entity.Split(':');
-            if (v.Length != 4) continue;
-            int type, x, y, dir;
-            if(!int.TryParse(v[0], out type) 
-                || !int.TryParse(v[1], out x)
-                || !int.TryParse(v[2], out y)
-                || !int.TryParse(v[3], out dir))
-            {
-                continue;
-            }
-            y = sizey - y;
-            var coordinates = new IntVector2(x, y);
-            if (!ContainsCoordinates(coordinates)) continue;
-            var currentCell = GetCell(coordinates);
+        var walls = from shape in document.Descendants("Shape")
+                    where (string)shape.Element("Type") == "line"
+                    select shape;
 
-            if (type == 1)
-            {
-                CreateWall(currentCell, null, (MazeDirection)dir);
-            }
-            else
-            {
-                var ncoordinates = currentCell.coordinates + ((MazeDirection)dir).ToIntVector2();
-                if (!ContainsCoordinates(ncoordinates)) continue;
-                var ncell = GetCell(ncoordinates);
-                CreatePassage(currentCell, ncell, (MazeDirection)dir, type);
-            }
-        }
+        var doors = from shape in document.Descendants("Shape")
+                    where (string)shape.Element("Type") == "doors"
+                    select shape;
+
     }
 
     public Vector3 GetPostionOnMaze(IntVector2 coordinates)
@@ -102,34 +65,6 @@ public class Maze : MonoBehaviour
         return new Vector3(coordinates.x - size.x * 0.5f + 0f, 0.5f, coordinates.z - size.z * 0.5f + 0.5f);
     }
 
-	private void DoFirstGenerationStep (List<MazeCell> activeCells) {
-		activeCells.Add(CreateCell(RandomCoordinates));
-	}
-
-	private void DoNextGenerationStep (List<MazeCell> activeCells) {
-		int currentIndex = activeCells.Count - 1;
-		MazeCell currentCell = activeCells[currentIndex];
-		if (currentCell.IsFullyInitialized) {
-			activeCells.RemoveAt(currentIndex);
-			return;
-		}
-		MazeDirection direction = currentCell.RandomUninitializedDirection;
-		IntVector2 coordinates = currentCell.coordinates + direction.ToIntVector2();
-		if (ContainsCoordinates(coordinates)) {
-			MazeCell neighbor = GetCell(coordinates);
-			if (neighbor == null) {
-				neighbor = CreateCell(coordinates);
-				CreatePassage(currentCell, neighbor, direction);
-				activeCells.Add(neighbor);
-			}
-			else {
-				CreateWall(currentCell, neighbor, direction);
-			}
-		}
-		else {
-			CreateWall(currentCell, null, direction);
-		}
-	}
 
 	private MazeCell CreateCell (IntVector2 coordinates) {
 		MazeCell newCell = Instantiate(cellPrefab) as MazeCell;
@@ -141,20 +76,14 @@ public class Maze : MonoBehaviour
 		return newCell;
 	}
 
-	private void CreatePassage (MazeCell cell, MazeCell otherCell, MazeDirection direction, int type = 2) {
-		MazePassage prefab = type == 3 ? doorPrefab : passagePrefab;
-		MazePassage passage = Instantiate(prefab) as MazePassage;
-		passage.Initialize(cell, otherCell, direction);
-		passage = Instantiate(prefab) as MazePassage;
-		passage.Initialize(otherCell, cell, direction.GetOpposite());
+	private void CreateDoor (Vector3 startpoint, Vector3 endpoint, Vector3 midpoint, double rotation) {
+		MazeDoor prefab = doorPrefab;
+        MazeDoor door = Instantiate(prefab) as MazeDoor;
+        door.Initialize(startpoint, endpoint, midpoint);
 	}
 
-	private void CreateWall (MazeCell cell, MazeCell otherCell, MazeDirection direction) {
-		//MazeWall wall = Instantiate(wallPrefab) as MazeWall;
-		//wall.Initialize(cell, otherCell, direction);
-		//if (otherCell != null) {
-		//	wall = Instantiate(wallPrefab) as MazeWall;
-		//	wall.Initialize(otherCell, cell, direction.GetOpposite());
-		//}
+	private void CreateWall (Vector3 startpoint, Vector3 endpoint, Vector3 midpoint, double rotation) {
+		MazeWall wall = Instantiate(wallPrefab) as MazeWall;
+		wall.Initialize(startpoint, endpoint, midpoint);
 	}
 }
