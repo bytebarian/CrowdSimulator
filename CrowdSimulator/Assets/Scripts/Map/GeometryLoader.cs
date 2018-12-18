@@ -3,14 +3,14 @@
 public class GeometryLoader : MonoBehaviour
 {
     public Groundplane groundplane;  
-    public Maze mazeInstance;
-    public Maze mazePrefab;
+    public Map mapInstance;
+    public Map mapPrefab;
 
     public void LoadGeometry(string folderpath)
     {
         groundplane = new Groundplane();
-        mazeInstance = Instantiate(mazePrefab) as Maze;
-        mazeInstance.LoadFromFile(folderpath + "geometry.txt");
+        mapInstance = Instantiate(mapPrefab) as Map;
+        mapInstance.LoadFromFile(folderpath + "map.xml");
     }
 }
 

@@ -15,7 +15,7 @@ public class PlaybackControl : MonoBehaviour
 
     bool lineIsDrawn;
 
-    private Maze mazeInstance;
+    private Map mazeInstance;
 
 	private void Start () {
         current_time = 0;
@@ -145,7 +145,7 @@ public class PlaybackControl : MonoBehaviour
         gl.LoadGeometry(path);
 
         var pl = GameObject.Find("PedestrianLoader").GetComponent<PedestrianLoader>();
-        pl.LoadFromFile(gl.mazeInstance, path);
+        pl.LoadFromFile(gl.mapInstance, path);
     }
 
 	private void RestartGame () {
